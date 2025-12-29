@@ -312,6 +312,8 @@
             padding: var(--space-2);
             background: none;
             border: none;
+            cursor: pointer;
+            z-index: 1001;
         }
 
         .mobile-menu-btn span {
@@ -320,13 +322,94 @@
             height: 2px;
             background: var(--color-text-primary);
             border-radius: 2px;
-            transition: var(--transition-fast);
+            transition: var(--transition-base);
+            transform-origin: center;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
         }
 
         @media (min-width: 768px) {
             .mobile-menu-btn {
                 display: none;
             }
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-bg-primary);
+            z-index: 999;
+            padding-top: calc(var(--header-height) + var(--space-8));
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-base), visibility var(--transition-base);
+        }
+
+        .mobile-nav.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav__inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-6);
+        }
+
+        .mobile-nav__link {
+            display: block;
+            padding: var(--space-4) var(--space-6);
+            font-size: var(--text-xl);
+            font-weight: 500;
+            color: var(--color-text-primary);
+            text-align: center;
+            width: 100%;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .mobile-nav__link:hover,
+        .mobile-nav__link:focus {
+            background: var(--color-bg-tertiary);
+            color: var(--color-accent);
+        }
+
+        .mobile-nav__cta {
+            margin-top: var(--space-6);
+            padding: var(--space-4) var(--space-8);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: white;
+            background: var(--color-accent);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .mobile-nav__cta:hover {
+            background: var(--color-accent-dark);
+        }
+
+        /* Prevent scroll when menu is open */
+        body.menu-open {
+            overflow: hidden;
         }
 
         /* =========================================
@@ -655,15 +738,21 @@
         }
 
         .highlight-card__icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(37, 99, 235, 0.1);
             border-radius: var(--radius-md);
-            font-size: var(--text-xl);
             margin-bottom: var(--space-3);
+            color: var(--color-accent);
+        }
+
+        .highlight-card__icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
         }
 
         .highlight-card__title {
@@ -788,7 +877,7 @@
         }
 
         .skill-card {
-            padding: var(--space-5);
+            padding: var(--space-6);
             background: var(--color-bg-primary);
             border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
@@ -804,24 +893,25 @@
         }
 
         .skill-card__icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto var(--space-3);
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-4);
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--color-bg-tertiary);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3);
         }
 
         .skill-card__icon img {
-            width: 32px;
-            height: 32px;
+            width: 56px;
+            height: 56px;
             object-fit: contain;
         }
 
         .skill-card__title {
-            font-size: var(--text-sm);
+            font-size: var(--text-base);
             font-weight: 600;
             color: var(--color-text-primary);
         }
@@ -973,7 +1063,13 @@
 
         @media (min-width: 768px) {
             .education__grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .education__grid {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
 
@@ -1021,6 +1117,15 @@
         .education-card__school {
             font-size: var(--text-sm);
             color: var(--color-text-muted);
+        }
+
+        .education-card__extra {
+            font-size: var(--text-xs);
+            color: var(--color-accent);
+            font-weight: 500;
+            margin-top: var(--space-2);
+            padding-top: var(--space-2);
+            border-top: 1px dashed var(--color-border);
         }
 
         /* =========================================
@@ -1558,6 +1663,18 @@
         </div>
     </header>
 
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav__inner">
+            <a href="#about" class="mobile-nav__link">Sobre mí</a>
+            <a href="#experience" class="mobile-nav__link">Experiencia</a>
+            <a href="#skills" class="mobile-nav__link">Servicios</a>
+            <a href="#portfolio" class="mobile-nav__link">Portfolio</a>
+            <a href="#contact" class="mobile-nav__link">Contacto</a>
+            <a href="#contact" class="mobile-nav__cta">Hablemos</a>
+        </div>
+    </nav>
+
     <!-- =========================================
          HERO
     ========================================= -->
@@ -1662,17 +1779,23 @@
                 
                 <div class="about__highlights">
                     <div class="highlight-card">
-                        <div class="highlight-card__icon">🎯</div>
+                        <div class="highlight-card__icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
                         <div class="highlight-card__title">Enfoque integral</div>
                         <div class="highlight-card__desc">Del concepto al producto final, dominando cada fase del proceso creativo y técnico.</div>
                     </div>
                     <div class="highlight-card">
-                        <div class="highlight-card__icon">⚡</div>
+                        <div class="highlight-card__icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
                         <div class="highlight-card__title">Entrega puntual</div>
                         <div class="highlight-card__desc">Experiencia en entornos de alta presión editorial con deadlines diarios.</div>
                     </div>
                     <div class="highlight-card">
-                        <div class="highlight-card__icon">🔄</div>
+                        <div class="highlight-card__icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        </div>
                         <div class="highlight-card__title">Adaptabilidad</div>
                         <div class="highlight-card__desc">Transición exitosa de artes gráficas tradicionales al desarrollo web moderno.</div>
                     </div>
@@ -1797,10 +1920,17 @@
             
             <div class="education__grid">
                 <div class="education-card">
-                    <img src="freelance/lagasca-serrano.jpg" alt="Escuela Lagasca Serrano" class="education-card__logo">
+                    <img src="freelance/virgen-de-la-paz.jpg" alt="Instituto Virgen de la Paz" class="education-card__logo">
                     <span class="education-card__year">2025 — Presente</span>
                     <h3 class="education-card__title">DAW - Desarrollo de Aplicaciones Web</h3>
-                    <p class="education-card__school">Escuela Lagasca Serrano · Madrid</p>
+                    <p class="education-card__school">FP Grado Superior a distancia · Instituto Virgen de la Paz</p>
+                </div>
+                <div class="education-card">
+                    <img src="freelance/lagasca-serrano.jpg" alt="Escuela Lagasca Serrano" class="education-card__logo">
+                    <span class="education-card__year">2025</span>
+                    <h3 class="education-card__title">Certificación Profesional Nivel 2</h3>
+                    <p class="education-card__school">Confección, programación y publicación de páginas web · GRUPO COLON - Escuela Lagasca Serrano</p>
+                    <p class="education-card__extra">Prácticas en Agencia de Publicidad - Pink Advertisement Group</p>
                 </div>
                 <div class="education-card">
                     <img src="freelance/cice.jpg" alt="CICE" class="education-card__logo">
@@ -1825,7 +1955,7 @@
         <div class="container">
             <div class="cta__inner">
                 <h2 class="cta__title">¿Tienes un proyecto en mente?</h2>
-                <p class="cta__desc">Estoy disponible para proyectos freelance, colaboraciones y posiciones a tiempo completo.</p>
+                <p class="cta__desc">Estoy disponible para proyectos freelance, colaboraciones y vacantes a tiempo completo.</p>
                 <div class="cta__buttons">
                     <a href="#contact" class="btn btn--primary">Contactar ahora</a>
                     <a href="mailto:oalaber@icloud.com" class="btn btn--secondary">oalaber@icloud.com</a>
@@ -1974,6 +2104,46 @@
     document.addEventListener('DOMContentLoaded', () => {
         
         // =========================================
+        // MOBILE MENU
+        // =========================================
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav__link, .mobile-nav__cta');
+
+        const toggleMobileMenu = () => {
+            mobileMenuBtn.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        };
+
+        const closeMobileMenu = () => {
+            mobileMenuBtn.classList.remove('active');
+            mobileNav.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        };
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking a link
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                closeMobileMenu();
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // =========================================
         // DATA
         // =========================================
         const experienceData = [
@@ -2087,17 +2257,32 @@
             { id: '4', title: 'Diario Médico', type: 'Editorial', logo: 'logotipos_empresas/diario_medico.png', media: [
                 { src: 'diario_medico/1.png', caption: 'Diseño editorial' }
             ]},
-            { id: '5', title: 'Atrápalo', type: 'Publicidad Digital', logo: 'logotipos_empresas/logoAtrapalo.png', media: [
+            { id: '5', title: 'Diplomacia', type: 'Revista', logo: 'logotipos_empresas/diplomacia.png', media: [
+                { src: 'diplomacia/1.png', caption: 'Diseño de revista' },
+                { src: 'diplomacia/2.png', caption: 'Maquetación editorial' }
+            ]},
+            { id: '6', title: 'Atrápalo', type: 'Publicidad Digital', logo: 'logotipos_empresas/logoAtrapalo.png', media: [
                 { src: 'Atrapalo/1.gif', caption: 'Banner animado' },
                 { src: 'Atrapalo/2.gif', caption: 'Banner animado' }
             ]},
-            { id: '6', title: 'Trámite', type: 'Revista', logo: 'logotipos_empresas/tramite.png', media: [
+            { id: '7', title: 'Trámite', type: 'Revista', logo: 'logotipos_empresas/tramite.png', media: [
                 { src: 'tramite/1.png', caption: 'Diseño de revista' }
             ]},
-            { id: '7', title: 'TuCaraMeSauna', type: 'Web & Marketing', logo: 'logotipos_empresas/0232.png', media: [
+            { id: '8', title: 'Masquevapor', type: 'E-commerce & Web', logo: 'logotipos_empresas/masquevapor.png', media: [
+                { src: 'masquevapor/1.png', caption: 'Diseño web' },
+                { src: 'masquevapor/2.png', caption: 'E-commerce' }
+            ]},
+            { id: '9', title: 'Miplacer.net', type: 'Web & Marketing', logo: 'logotipos_empresas/miplacer.png', media: [
+                { src: 'miplacer/1.png', caption: 'Diseño web' },
+                { src: 'miplacer/2.png', caption: 'Marketing digital' }
+            ]},
+            { id: '10', title: 'Fnac', type: 'Retail & Diseño', logo: 'logotipos_empresas/fnac.png', media: [
+                { src: 'fnac/1.png', caption: 'Diseño gráfico' }
+            ]},
+            { id: '11', title: 'TuCaraMeSauna', type: 'Web & Marketing', logo: 'logotipos_empresas/0232.png', media: [
                 { src: 'TCMS/tcms1.png', caption: 'Publicidad digital' }
             ]},
-            { id: '8', title: 'Inmoamp', type: 'Desarrollo Web', logo: 'logotipos_empresas/inmoamp.png', media: [
+            { id: '12', title: 'Inmoamp', type: 'Desarrollo Web', logo: 'logotipos_empresas/inmoamp.png', media: [
                 { src: 'inmoamp/in1.png', caption: 'Desarrollo web' }
             ]}
         ];
